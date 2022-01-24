@@ -16,7 +16,7 @@ def create_connection():
         print(f'Ошибка: "{err}"')
 
 
-def create_admin_table():
+def create_admin_table(time=2):
     con = create_connection()
     try:
         cursor = con.cursor()
@@ -52,6 +52,7 @@ def create_messages_table():
     finally:
         if con:
             con.close()
+
 
 if __name__ == '__main__':
     create_admin_table()
