@@ -96,7 +96,7 @@ async def add_time(message: types.Message, state: FSMContext):
     await message.answer('Все супер, жди моих сообщений\n Возврат на начальную страницу', reply_markup=keyboard)
 
 
-def register_work_with_messages(dp: Dispatcher):
+def register_make_messages(dp: Dispatcher):
     dp.register_message_handler(make_messages, Text(equals='добавить сообщение', ignore_case=True))
     dp.register_message_handler(add_text, state=MakeMessage.waiting_for_text)
     dp.register_message_handler(check_text, state=MakeMessage.waiting_for_check_text)
