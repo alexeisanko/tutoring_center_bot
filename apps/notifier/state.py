@@ -11,3 +11,7 @@ class MakeMessage(StatesGroup):
 
 class Notifier(StatesGroup):
     waiting_work_with_notifier = State()
+
+
+class ShowMessage(StatesGroup):
+    waiting_choice_message = State()

@@ -51,12 +51,12 @@ def week_keyboard() -> types.ReplyKeyboardMarkup:
     return keyboard
 
 
-# def messages_keyboard(messages) -> types.ReplyKeyboardMarkup:
-#     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
-#     for message in messages:
-#         keyboard.add(message[0])
-#         keyboard.add('Отмена')
-#     return keyboard
+def messages_keyboard(messages) -> types.ReplyKeyboardMarkup:
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
+    for message in messages:
+        keyboard.add(message[0])
+        keyboard.add('Назад')
+    return keyboard
 #
 #
 # def change_keyboard(message) -> types.ReplyKeyboardMarkup:

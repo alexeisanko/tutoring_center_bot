@@ -24,6 +24,19 @@ def get_text_all_messages() -> list:
     return rows
 
 
+def get_message_by_text(text: str) -> list:
+    con = create_connection()
+    cursor = con.cursor()
+    insert_query = '''SELECT text, periodicity, near_data_publ, time_publ, type_chat FROM messages 
+    WHERE text=%s'''
+    items = (text,)
+    cursor.execute(insert_query, items)
+    rows = cursor.fetchall()
+    cursor.close()
+    con.close()
+    return rows
+
+
 def get_sent_message(near_data_publ: str, time_publ: str) -> list:
     con = create_connection()
     cursor = con.cursor()

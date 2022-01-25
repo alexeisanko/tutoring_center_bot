@@ -33,7 +33,7 @@ async def begin_send_messages(message: types.Message):
                     except ValueError:
                         new_near_data = day_now.replace(month=day_now.month + 1, day=28)
                 change_near_date(row[0], new_near_data.strftime('%d.%m.%y'))
-        await asyncio.sleep(60)
+        await asyncio.sleep(55)
 
 
 async def stop_send_messages(message: types.Message):
