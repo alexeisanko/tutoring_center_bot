@@ -37,20 +37,12 @@ def get_sent_message(near_data_publ: str, time_publ: str) -> list:
     return rows
 
 
-def get_desired_message(text: str) -> list:
+def change_near_date(number: str, new_near_date: str) -> list:
     con = create_connection()
     cursor = con.cursor()
-    insert_query = '''SELECT text, periodicity, near_data_publ FROM messages 
-    WHERE text=%s'''
-    items = (text,)
+    insert_query = '''UPDATE messages set near_data_publ = %s WHERE id=%s'''
+    items = (new_near_date, number)
     cursor.execute(insert_query, items)
-    rows = cursor.fetchall()
+    con.commit()
     cursor.close()
     con.close()
-    return rows
-
-
-
-
-
-

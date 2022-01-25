@@ -1,7 +1,7 @@
 from aiogram import types
 
 
-def start_keyboard() -> types.ReplyKeyboardMarkup:
+def start_keyboard(one_time=True) -> types.ReplyKeyboardMarkup:
     button_add = 'Добавить'
     button_list = 'Посмотреть все'
     button_change = 'Изменить'
@@ -9,7 +9,7 @@ def start_keyboard() -> types.ReplyKeyboardMarkup:
     button_start = 'Включить рассылку'
     button_end = 'Остановить рассылку'
     button_main_menu = 'Вернуться в главное меню'
-    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=one_time)
     keyboard.\
         add(button_add, button_list).\
         add(button_change, button_remove).\
