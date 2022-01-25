@@ -5,18 +5,11 @@ import time
 import datetime
 
 import apps.notifier.keyboards as keyboards
-from apps.notifier.state import MakeMessage
+from apps.notifier.state import MakeMessage, Notifier
 from apps.notifier.models import save_message
 
 
 async def make_messages(message: types.Message):
-    # admins_users = models.get_admin_users_id()
-    # admins = []
-    # for admin in admins_users:
-    #     admins.append(admin[0])
-    # if message.from_user.id not in admins:
-    #     await message.answer('Недостаточный уровень доступа. Введите /registration для проверки.')
-    #     return
     await message.answer('Введи текст сообщения')
     await MakeMessage.waiting_for_text.set()
 
@@ -92,12 +85,15 @@ async def add_time(message: types.Message, state: FSMContext):
             data['near_date'] += datetime.timedelta(weeks=1)
     save_message(data['text'], data['periodicity'], data['near_date'].strftime('%d.%m.%y'), need_time, type_chat='Преподавательский')
     await state.finish()
+    await Notifier.waiting_work_with_notifier.set()
     keyboard = keyboards.start_keyboard()
     await message.answer('Все супер, жди моих сообщений\n Возврат на начальную страницу', reply_markup=keyboard)
 
 
 def register_make_messages(dp: Dispatcher):
-    dp.register_message_handler(make_messages, Text(equals='добавить сообщение', ignore_case=True))
+    dp.register_message_handler(make_messages,
+                                Text(equals='добавить', ignore_case=True),
+                                state=Notifier.waiting_work_with_notifier)
     dp.register_message_handler(add_text, state=MakeMessage.waiting_for_text)
     dp.register_message_handler(check_text, state=MakeMessage.waiting_for_check_text)
     dp.register_message_handler(add_time_repeat, state=MakeMessage.waiting_how_often_repeat_text)

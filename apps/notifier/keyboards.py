@@ -2,12 +2,20 @@ from aiogram import types
 
 
 def start_keyboard() -> types.ReplyKeyboardMarkup:
-    button_add = 'Добавить сообщение'
-    button_list = 'Посмотреть созданные сообщения'
-    button_change = 'Изменить сообщение'
-    button_remove = 'Удалить сообщения'
+    button_add = 'Добавить'
+    button_list = 'Посмотреть все'
+    button_change = 'Изменить'
+    button_remove = 'Удалить'
+    button_start = 'Включить рассылку'
+    button_end = 'Остановить рассылку'
+    button_main_menu = 'Вернуться в главное меню'
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-    keyboard.add(button_add).add(button_list).add(button_change).add(button_remove)
+    keyboard.\
+        add(button_add, button_list).\
+        add(button_change, button_remove).\
+        add(button_start).\
+        add(button_end).\
+        add(button_main_menu)
     return keyboard
 
 
@@ -41,3 +49,19 @@ def week_keyboard() -> types.ReplyKeyboardMarkup:
     for button in buttons:
         keyboard.add(button)
     return keyboard
+
+
+# def messages_keyboard(messages) -> types.ReplyKeyboardMarkup:
+#     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
+#     for message in messages:
+#         keyboard.add(message[0])
+#         keyboard.add('Отмена')
+#     return keyboard
+#
+#
+# def change_keyboard(message) -> types.ReplyKeyboardMarkup:
+#     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+#     for value in message:
+#         pass
+#         # TODO доделать
+#     return keyboard
