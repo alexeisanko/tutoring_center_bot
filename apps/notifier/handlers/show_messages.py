@@ -21,7 +21,7 @@ async def uncover_message(message: types.Message):
         return
     await message.answer(f'Текст:\n{my_message[0][0]}\n\n'
                          f'Периодичность: {my_message[0][1]}\n\n'
-                         f'Ближайшая дата отправки {my_message[0][2]} {my_message[0][3]}\n\n'
+                         f'Ближайшая дата отправки\n{my_message[0][2]} {my_message[0][3]}\n\n'
                          f'Вид чата: {my_message[0][4]}')
 
 
@@ -31,7 +31,7 @@ async def come_back(message: types.Message):
     await message.answer('Просмотр закрыт', reply_markup=keyboard)
 
 
-def register_make_messages(dp: Dispatcher):
+def register_show_messages(dp: Dispatcher):
     dp.register_message_handler(show_messages,
                                 Text(equals='посмотреть все', ignore_case=True),
                                 state=Notifier.waiting_work_with_notifier)
