@@ -10,6 +10,7 @@ from apps.notifier.models import get_text_all_messages, get_message_by_text
 async def show_messages(message: types.Message):
     await ShowMessage.waiting_choice_message.set()
     text_messages = get_text_all_messages()
+
     keyboard = keyboards.messages_keyboard(text_messages)
     await message.answer('Что бы посмотреть подробности выберите любое сообщение', reply_markup=keyboard)
 

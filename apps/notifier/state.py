@@ -7,6 +7,7 @@ class MakeMessage(StatesGroup):
     waiting_how_often_repeat_text = State()
     waiting_day_of_the_week = State()
     waiting_time = State()
+    waiting_type_chat = State()
 
 
 class Notifier(StatesGroup):

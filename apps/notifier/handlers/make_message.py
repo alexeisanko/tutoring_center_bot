@@ -78,12 +78,29 @@ async def add_time(message: types.Message, state: FSMContext):
         await message.answer('формат времени чч:мм, попробуй еще раз')
         return
     need_time = message.text
+    await state.update_data(time_publ=need_time)
+    await MakeMessage.next()
+    keyboard = keyboards.type_chat_keyboard()
+    await message.answer('И последнее, в какой чат мы все это отправим', reply_markup=keyboard)
+
+
+async def add_type_chat(message: types.Message, state: FSMContext):
+    variants = ['преподовательский', 'ученический']
+    if message.text.lower() not in variants:
+        keyboard = keyboards.type_chat_keyboard()
+        await message.answer('Пока только есть два чата, выберите из них (кнопки)', reply_markup=keyboard)
+        return
     data = await state.get_data()
     date_now = datetime.datetime.now()
     if data['near_date'] == datetime.date.today():
-        if need_time < date_now.time().strftime('%H:%M'):
+        if data['time_publ'] < date_now.time().strftime('%H:%M'):
             data['near_date'] += datetime.timedelta(weeks=1)
-    save_message(data['text'], data['periodicity'], data['near_date'].strftime('%d.%m.%y'), need_time, type_chat='Преподавательский')
+    save_message(data['text'],
+                 data['periodicity'],
+                 data['near_date'].strftime('%d.%m.%y'),
+                 data['time_publ'],
+                 type_chat=message.text.lower()
+                 )
     await state.finish()
     await Notifier.waiting_work_with_notifier.set()
     keyboard = keyboards.start_keyboard()
@@ -99,3 +116,4 @@ def register_make_messages(dp: Dispatcher):
     dp.register_message_handler(add_time_repeat, state=MakeMessage.waiting_how_often_repeat_text)
     dp.register_message_handler(add_day_of_the_week, state=MakeMessage.waiting_day_of_the_week)
     dp.register_message_handler(add_time, state=MakeMessage.waiting_time)
+    dp.register_message_handler(add_type_chat, state=MakeMessage.waiting_type_chat)
