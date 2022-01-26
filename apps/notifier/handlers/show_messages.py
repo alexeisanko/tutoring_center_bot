@@ -19,10 +19,10 @@ async def uncover_message(message: types.Message):
     if not my_message:
         await message.answer('Такого сообщения нету. Выберите сообщение из списка')
         return
-    await message.answer(f'Текст:\n{my_message[0][0]}\n\n'
-                         f'Периодичность: {my_message[0][1]}\n\n'
-                         f'Ближайшая дата отправки\n{my_message[0][2]} {my_message[0][3]}\n\n'
-                         f'Вид чата: {my_message[0][4]}')
+    await message.answer(f'Текст:\n{my_message[0][1]}\n\n'
+                         f'Периодичность: {my_message[0][2]}\n\n'
+                         f'Ближайшая дата отправки\n{my_message[0][3]} {my_message[0][4]}\n\n'
+                         f'Вид чата: {my_message[0][5]}')
 
 
 async def come_back(message: types.Message):

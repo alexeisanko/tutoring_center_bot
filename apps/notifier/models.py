@@ -27,7 +27,7 @@ def get_text_all_messages() -> list:
 def get_message_by_text(text: str) -> list:
     con = create_connection()
     cursor = con.cursor()
-    insert_query = '''SELECT text, periodicity, near_data_publ, time_publ, type_chat FROM messages 
+    insert_query = '''SELECT id, text, periodicity, near_data_publ, time_publ, type_chat FROM messages 
     WHERE text=%s'''
     items = (text,)
     cursor.execute(insert_query, items)
@@ -50,7 +50,7 @@ def get_sent_message(near_data_publ: str, time_publ: str) -> list:
     return rows
 
 
-def change_near_date(number: str, new_near_date: str) -> list:
+def change_near_date(number: str, new_near_date: str) -> None:
     con = create_connection()
     cursor = con.cursor()
     insert_query = '''UPDATE messages set near_data_publ = %s WHERE id=%s'''
@@ -59,3 +59,15 @@ def change_near_date(number: str, new_near_date: str) -> list:
     con.commit()
     cursor.close()
     con.close()
+
+
+def change_message(command: str, new_value: str, my_id: str):
+    con = create_connection()
+    cursor = con.cursor()
+    insert_query = f'''UPDATE messages set {command} = %s WHERE id=%s'''
+    items = (new_value, my_id)
+    cursor.execute(insert_query, items)
+    con.commit()
+    cursor.close()
+    con.close()
+

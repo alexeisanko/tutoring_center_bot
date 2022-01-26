@@ -57,11 +57,26 @@ def messages_keyboard(messages) -> types.ReplyKeyboardMarkup:
         keyboard.add(message[0])
     keyboard.add('Назад')
     return keyboard
-#
-#
-# def change_keyboard(message) -> types.ReplyKeyboardMarkup:
-#     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-#     for value in message:
-#         pass
-#         # TODO доделать
-#     return keyboard
+
+
+def change_keyboard(message) -> types.ReplyKeyboardMarkup:
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    button_text = message[1]
+    button_periodicity = message[2]
+    button_near_data_publ = message[3]
+    button_time_publ = message[4]
+    button_type_chat = message[5]
+    button_come_back = 'Назад'
+    keyboard.add(f'Текст: {button_text}')
+    keyboard.add(f'Периодичность: {button_periodicity}')
+    keyboard.add(f'Ближайшая дата: {button_near_data_publ}')
+    keyboard.add(f'Время: {button_time_publ}')
+    keyboard.add(f'Тип чата: {button_type_chat}')
+    keyboard.add(button_come_back)
+    return keyboard
+
+
+def type_chat_keyboard():
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
+    keyboard.add('Преподовательский').add('Ученический')
+    return keyboard

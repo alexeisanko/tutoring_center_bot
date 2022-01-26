@@ -15,3 +15,10 @@ class Notifier(StatesGroup):
 
 class ShowMessage(StatesGroup):
     waiting_choice_message = State()
+
+
+class ChangeMessage(StatesGroup):
+    waiting_choice_message = State()
+    waiting_choice_change = State()
+    waiting_add_change = State()
+    waiting_save_change = State()
