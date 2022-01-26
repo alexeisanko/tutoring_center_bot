@@ -71,3 +71,13 @@ def change_message(command: str, new_value: str, my_id: str):
     cursor.close()
     con.close()
 
+
+def delete_message(my_id: str):
+    con = create_connection()
+    cursor = con.cursor()
+    insert_query = '''DELETE FROM messages WHERE id=%s'''
+    items = (my_id,)
+    cursor.execute(insert_query, items)
+    con.commit()
+    cursor.close()
+    con.close()

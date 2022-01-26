@@ -22,3 +22,8 @@ class ChangeMessage(StatesGroup):
     waiting_choice_change = State()
     waiting_add_change = State()
     waiting_save_change = State()
+
+
+class DeleteMessage(StatesGroup):
+    waiting_choice_message = State()
+    waiting_accept_delete = State()
