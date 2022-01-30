@@ -40,7 +40,7 @@ def get_message_by_text(text: str) -> list:
 def get_sent_message(near_data_publ: str, time_publ: str) -> list:
     con = create_connection()
     cursor = con.cursor()
-    insert_query = '''SELECT id, text, periodicity FROM messages 
+    insert_query = '''SELECT id, text, periodicity, type_chat FROM messages 
     WHERE near_data_publ=%s AND time_publ=%s'''
     items = (near_data_publ, time_publ)
     cursor.execute(insert_query, items)
