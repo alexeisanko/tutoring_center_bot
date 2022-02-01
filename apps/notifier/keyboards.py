@@ -78,5 +78,5 @@ def change_keyboard(message) -> types.ReplyKeyboardMarkup:
 
 def type_chat_keyboard():
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
-    keyboard.add('Преподовательский').add('Ученический')
+    keyboard.add('Преподавательский').add('Ученический')
     return keyboard

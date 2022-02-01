@@ -85,7 +85,7 @@ async def add_time(message: types.Message, state: FSMContext):
 
 
 async def add_type_chat(message: types.Message, state: FSMContext):
-    variants = ['преподовательский', 'ученический']
+    variants = ['преподавательский', 'ученический']
     if message.text.lower() not in variants:
         keyboard = keyboards.type_chat_keyboard()
         await message.answer('Пока только есть два чата, выберите из них (кнопки)', reply_markup=keyboard)

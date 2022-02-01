@@ -16,14 +16,15 @@ def create_connection():
         print(f'Ошибка: "{err}"')
 
 
-def create_admin_table(time=2):
+def create_admin_table():
     con = create_connection()
     try:
         cursor = con.cursor()
         cursor.execute('''
-        CREATE TABLE admin_user 
+        CREATE TABLE users 
         (id SERIAL,
-        user_id INT NOT NULL);''')
+        user_id INT NOT NULL,
+        type_user VARCHAR(5) );''')
         con.commit()
         cursor.close()
     except OperationalError as err:
