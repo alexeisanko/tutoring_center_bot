@@ -1,4 +1,4 @@
-from utils.db_api import create_connection
+from utils_tg.db_api import create_connection
 
 
 def save_admin_user(user_id: int) -> None:

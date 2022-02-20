@@ -5,7 +5,7 @@ from aiogram.dispatcher import FSMContext
 from config import ADMIN_LOGIN, ADMIN_PASSWORD
 from apps.reg_users.state import MakeAdmin
 from apps.reg_users.models import save_admin_user
-from utils.comon import start_keyboard
+from utils_tg.common_handlers import start_keyboard
 
 
 async def register(message: types.Message):

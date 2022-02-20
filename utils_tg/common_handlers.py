@@ -5,7 +5,7 @@ from aiogram.dispatcher.filters import Text
 
 def start_keyboard() -> types.ReplyKeyboardMarkup:
     button_notifier = 'Рассылка сообщений'
-    button_new = '(Разработка)'
+    button_new = 'Экзамены (Разработка)'
 
     keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     keyboard.add(button_notifier).add(button_new)
@@ -15,7 +15,7 @@ def start_keyboard() -> types.ReplyKeyboardMarkup:
 async def cmd_start(message: types.Message, state: FSMContext):
     await state.finish()
     keyboard = start_keyboard()
-    await message.answer('Вас приветствует личный бот репетиторского центра?\n'
+    await message.answer('Вас приветствует личный бот репетиторского центра New School?\n'
                          'Что хотите сделать?', reply_markup=keyboard)
 
 
