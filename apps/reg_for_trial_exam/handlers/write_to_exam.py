@@ -3,7 +3,7 @@ from vkbottle import CtxStorage
 from .. import keyboards
 from utils_vk.common_handlers import start_keyboard
 from ..state import RegExam
-
+from ..google_sheets_api import exam
 
 SUBJECTS = ['математика', 'русский', 'литература', 'общество', 'история', 'английский', 'биология', 'без второго']
 P_SUBJECTS = ['математику', 'русский', 'литературу', 'общество', 'историю', 'английский', 'биологию']
@@ -65,9 +65,10 @@ async def choice_second_day(message: Message):
     second_subject = STORAGE.get('second_subject')
     if second_subject == 'без второго':
         first_subject = STORAGE.get('first_subject')
+        await message.answer(f'Секунду, я проверю наличие свободных мест.')
         await message.answer(
-            f'Последний шаг! Выбери, в какое время ты сможешь прийти на {P_SUBJECTS[SUBJECTS.index(first_subject)]}',
-            keyboard=keyboards.time_keyboard())
+            f'Нашел! Выбери, в какое время ты сможешь прийти на {P_SUBJECTS[SUBJECTS.index(first_subject)]}',
+            keyboard=keyboards.time_keyboard(day=message.text.lower()))
         await bp.state_dispenser.set(message.peer_id, RegExam.CHOICE_FIRST_TIME)
     else:
         await message.answer(f'А когда будем сдавать {P_SUBJECTS[SUBJECTS.index(second_subject)]}?',
@@ -83,17 +84,20 @@ async def choice_first_time(message: Message):
         return
     STORAGE.set('second_day', message.text.lower())
     first_subject = STORAGE.get('first_subject')
-    await message.answer(f'Последний шаг! Выбери, в какое время ты сможешь прийти на '
+    first_day = STORAGE.get('first_day')
+    await message.answer(f'Сейчас проверим есть ли свободное время для записи')
+    await message.answer(f'Последний шаг! Выбери, когда ты сможешь прийти на '
                          f'{P_SUBJECTS[SUBJECTS.index(first_subject)]}',
-                         keyboard=keyboards.time_keyboard())
+                         keyboard=keyboards.time_keyboard(first_day))
     await bp.state_dispenser.set(message.peer_id, RegExam.CHOICE_FIRST_TIME)
 
 
 @bp.on.private_message(state=RegExam.CHOICE_FIRST_TIME)
 async def choice_second_time(message: Message):
     if message.text.lower() not in ['8:00 - 10:00', '10:00 - 12:00', '12:00 - 14:00', '14:00 - 16:00', '16:00 - 18:00']:
+        first_day = STORAGE.get('first_day')
         await message.answer('В такое время мы не сможем провести. Выбери пожалуйста из предложенного',
-                             keyboard=keyboards.time_keyboard())
+                             keyboard=keyboards.time_keyboard(first_day))
         return
     STORAGE.set('first_time', message.text.lower())
     second_subject = STORAGE.get('second_subject')
@@ -105,10 +109,19 @@ async def choice_second_time(message: Message):
             f"Тип пробного экзамена: {STORAGE.get('type_exam')}\n"
             f"{STORAGE.get('first_subject')}: {STORAGE.get('first_day')} - {STORAGE.get('first_time')}\n",
             keyboard=start_keyboard())
+        users_info = await bp.api.users.get(message.from_id)
+        exam.sign_up_to_exam({
+            'name': users_info[0].first_name,
+            'first_day': STORAGE.get('first_day'),
+            'first_time': STORAGE.get('first_time'),
+            'first_subject': STORAGE.get('first_subject')
+        },
+            second=False)
         await bp.state_dispenser.delete(message.peer_id)
     else:
+
         await message.answer(f'А в какое время пойдем на {P_SUBJECTS[SUBJECTS.index(second_subject)]}? ',
-                             keyboard=keyboards.time_keyboard())
+                             keyboard=keyboards.time_keyboard(STORAGE.get('second_day')))
         await bp.state_dispenser.set(message.peer_id, RegExam.CHOICE_SECOND_TIME)
 
 
@@ -116,7 +129,7 @@ async def choice_second_time(message: Message):
 async def finish_reg_exam(message: Message):
     if message.text.lower() not in ['8:00 - 10:00', '10:00 - 12:00', '12:00 - 14:00', '14:00 - 16:00', '16:00 - 18:00']:
         await message.answer('В такое время мы не сможем провести. Выбери пожалуйста из предложенного',
-                             keyboard=keyboards.time_keyboard())
+                             keyboard=keyboards.time_keyboard(STORAGE.get('second_day')))
         return
     STORAGE.set('second_time', message.text.lower())
     await message.answer('Супер! Я записал тебя и буду ждать, когда ты придешь на пробный в эти выходные! Если что-то '
@@ -126,4 +139,16 @@ async def finish_reg_exam(message: Message):
                          f"{STORAGE.get('first_subject')}: {STORAGE.get('first_day')} - {STORAGE.get('first_time')}\n"
                          f"{STORAGE.get('second_subject')}: {STORAGE.get('second_day')} - {STORAGE.get('second_time')}",
                          keyboard=start_keyboard())
+    users_info = await bp.api.users.get(message.from_id)
+    exam.sign_up_to_exam({
+        'name': users_info[0].first_name,
+        'first_day': STORAGE.get('first_day'),
+        'first_time': STORAGE.get('first_time'),
+        'first_subject': STORAGE.get('first_subject'),
+        'second_day': STORAGE.get('second_day'),
+        'second_time': STORAGE.get('second_time'),
+        'second_subject': STORAGE.get('second_subject')
+    },
+        second=False)
+
     await bp.state_dispenser.delete(message.peer_id)

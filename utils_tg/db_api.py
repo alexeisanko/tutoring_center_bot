@@ -20,7 +20,7 @@ def create_admin_table():
     con = create_connection()
     try:
         cursor = con.cursor()
-        cursor.execute('''
+        cursor.execute(''' 
         CREATE TABLE users 
         (id SERIAL,
         user_id INT NOT NULL,

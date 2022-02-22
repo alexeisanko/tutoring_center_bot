@@ -11,7 +11,7 @@ def start_keyboard():
     return keyboard
 
 
-@bp.on.private_message(command='start', state=None)
+@bp.on.private_message(command='start')
 async def start(message: Message):
     await message.answer('Привет!\n'
                          'Я - чат-робот учебного центра НьюСкул.\n'
