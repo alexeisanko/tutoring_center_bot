@@ -1,4 +1,4 @@
-from utils_tg.db_api import create_connection
+from tg_utils.db_api import create_connection
 
 
 def save_message(text, periodicity, near_data_publ, time_publ, type_chat='Преподавательский') -> None:

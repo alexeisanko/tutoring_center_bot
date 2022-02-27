@@ -6,18 +6,20 @@ import random
 
 from config import CHAT_ID_VK
 from apps.notifier.models import get_sent_message, change_near_date
+from vk_utils.common_handlers import start_keyboard
 
 bp = Blueprint()
-FLAG = False
+FLAG_GENERAL = False
+FLAG_PRIVATE = False
 
 
-@bp.on.chat_message(command='start_mailing')
+@bp.on.private_message(command='start_mailing')
 async def begin_send_message(message: Message):
-    global FLAG
-    FLAG = True
+    global FLAG_GENERAL
+    FLAG_GENERAL = True
     await message.answer('Режим оповещения включен')
     while True:
-        if not FLAG:
+        if not FLAG_GENERAL:
             return
         day_now = datetime.date.today()
         time_now = datetime.datetime.now()
@@ -39,9 +41,48 @@ async def begin_send_message(message: Message):
         await asyncio.sleep(55)
 
 
-@bp.on.chat_message(command='stop_mailing')
+@bp.on.private_message(command='stop_mailing')
 async def stop_send_messages(message: Message):
-    global FLAG
-    FLAG = False
+    global FLAG_GENERAL
+    FLAG_GENERAL = False
     await message.answer('Режим оповещения отключен')
+    return
+
+
+@bp.on.private_message(command='start_private_mailing')
+async def begin_send_private_message(message: Message):
+    global FLAG_PRIVATE
+    FLAG_PRIVATE = True
+    await message.answer('Режим оповещения в личку включен')
+    while True:
+        if not FLAG_PRIVATE:
+            return
+        if datetime.datetime.now().weekday() == 1 and datetime.datetime.now().hour == 12:
+            members = dict(await bp.api.groups.get_members(205480957))
+            for member in members['items']:
+                await bp.api.messages.send(message='Привет!\n'
+                                                   'Желаю тебе хорошей учебной недели! '
+                                                   'Открыта регистрация на пробник, может сразу запишемся?\n\n'
+                                                   'P.S. Напоминаю, что делайн для записи - пятница 14:00. '
+                                                   'После этого запись прекращается',
+                                           user_id=member,
+                                           random_id=random.randint(1, 1000000), keyboard=start_keyboard())
+        elif datetime.datetime.now().weekday() == 3 and datetime.datetime.now().hour == 12:
+            members = dict(await bp.api.groups.get_members(205480957))
+            for member in members['items']:
+                await bp.api.messages.send(message='Салют!\n'
+                                                   'Завтра последний день для записи на пробный экзамен, ты уже '
+                                                   'записался?\n\n '
+                                                   'P.S. Напоминаю, что делайн для записи - пятница 14:00. После '
+                                                   'этого запись прекращается',
+                                           user_id=member,
+                                           random_id=random.randint(1, 1000000))
+        await asyncio.sleep(60)
+
+
+@bp.on.private_message(command='stop_private_mailing')
+async def stop_send_private_messages(message: Message):
+    global FLAG_PRIVATE
+    FLAG_PRIVATE = False
+    await message.answer('Режим оповещения в личку отключен')
     return

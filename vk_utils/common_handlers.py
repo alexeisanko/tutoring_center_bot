@@ -6,7 +6,7 @@ bp = Blueprint()
 
 
 def start_keyboard():
-    keyboard = Keyboard(one_time=True, inline=False)
+    keyboard = Keyboard(one_time=False, inline=False)
     keyboard.add(Text("Записаться на пробный экз."), color=KeyboardButtonColor.POSITIVE).get_json()
     return keyboard
 

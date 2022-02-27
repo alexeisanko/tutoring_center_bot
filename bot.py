@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from multiprocessing import Process
 
@@ -5,14 +6,15 @@ from aiogram import Bot as BotTG, Dispatcher, executor
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from config import TOKEN_API_TG
-from utils_tg.common_handlers import register_common
+from tg_utils.common_handlers import register_common
 from apps.notifier.manage import register_notifier
 from apps.reg_users import register_reg_user
 
 from vkbottle.bot import Bot as BotVK
 from config import TOKEN_API_VK
+from vk_utils import welcome_message
 import apps
-import utils_vk
+import vk_utils
 
 
 logging.basicConfig(level=logging.INFO,
@@ -32,12 +34,14 @@ def bot_tg():
 def bot_vk():
     bot = BotVK(token=TOKEN_API_VK)
 
-    for bp in utils_vk.bps:
+    for bp in vk_utils.bps:
         bp.load(bot)
 
     for bp in apps.bps:
         bp.load(bot)
 
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(welcome_message.send_welcome_message())
     bot.run_forever()
 
 
