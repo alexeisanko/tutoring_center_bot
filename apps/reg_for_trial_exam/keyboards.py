@@ -20,10 +20,12 @@ def subjects_keyboard(second=False):
     return keyboard.get_json()
 
 
-def day_keyboard():
+def day_keyboard(sut, sun):
     keyboard = Keyboard(one_time=True, inline=False)
-    keyboard.add(Text("Суббота"), color=KeyboardButtonColor.POSITIVE)
-    keyboard.add(Text("Воскресенье"), color=KeyboardButtonColor.POSITIVE)
+    if sut:
+        keyboard.add(Text("Суббота"), color=KeyboardButtonColor.POSITIVE)
+    if sun:
+        keyboard.add(Text("Воскресенье"), color=KeyboardButtonColor.POSITIVE)
     return keyboard.get_json()
 
 
