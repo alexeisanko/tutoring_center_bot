@@ -15,10 +15,9 @@ async def choice_exam(message: Message):
     await message.answer('Секунду, я проверю наличие свободных мест.')
     free_places_sut = exam.get_times_sut()
     free_places_sun = exam.get_time_sun()
-    if not all((free_places_sut, free_places_sun)):
+    if not any((free_places_sut, free_places_sun)):
         await message.answer('К сожалению, свободных мест больше не осталось. Ждем тебя на следующей неделе!',
                              keyboard=None)
-        await bp.state_dispenser.delete(message.peer_id)
         return
     STORAGE.set('free_places_sut', free_places_sut)
     STORAGE.set('free_places_sun', free_places_sun)

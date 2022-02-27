@@ -60,9 +60,9 @@ def sign_up_to_exam(data, second=False):
     second_column = data['second_free_places'][data['second_time']][0]
     second_begin_row = data['second_free_places'][data['second_time']][1]
     try:
-        additive = data['first_free_places'][data['first_time']][2].index([])
+        additive = data['second_free_places'][data['second_time']][2].index([])
     except ValueError:
-        additive = len(data['first_free_places'][data['first_time']][2])
+        additive = len(data['second_free_places'][data['second_time']][2])
     second_row = second_begin_row + additive
     if first_column == second_column and first_row == second_row and data['first_day'] == data['second_day']:
         text = f"{data['name']} ({data['first_subject']} + {data['second_subject']}  {data['type_exam'].upper()})"
