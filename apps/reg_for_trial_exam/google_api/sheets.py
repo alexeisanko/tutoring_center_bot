@@ -1,14 +1,16 @@
 import gspread
+from .drive import CURRENT_SHEETS_ID
 
 
-gc = gspread.service_account('apps/reg_for_trial_exam/google_sheets_api/client_secret.json')
-# gc = gspread.service_account('client_secret.json')
-
-
-sh = gc.open_by_key("1YbHGr9Tt3xo5ri03iZrGi-rnpE_R4_arcGVOckH6unk")
+def connect_to_sheet():
+    gc = gspread.service_account('apps/reg_for_trial_exam/google_api/client_secret.json')
+    # gc = gspread.service_account('client_secret.json')
+    sh = gc.open_by_key(CURRENT_SHEETS_ID)
+    return sh
 
 
 def get_times_sut():
+    sh = connect_to_sheet()
     entrys_st1 = sh.worksheet('СУББОТА').get('B2:B25')
     entrys_st2 = sh.worksheet('СУББОТА').get('D2:D25')
     write_to_exam_st = {
@@ -22,6 +24,7 @@ def get_times_sut():
 
 
 def get_time_sun():
+    sh = connect_to_sheet()
     entrys_sun1 = sh.worksheet('ВОСКРЕСЕНЬЕ').get('B2:B25')
     entrys_sun2 = sh.worksheet('ВОСКРЕСЕНЬЕ').get('D2:D25')
     write_to_exam_sun = {
@@ -45,6 +48,7 @@ def choice_free(data: dict):
 
 
 def sign_up_to_exam(data, second=False):
+    sh = connect_to_sheet()
     first_column = data['first_free_places'][data['first_time']][0]
     first_begin_row = data['first_free_places'][data['first_time']][1]
     try:

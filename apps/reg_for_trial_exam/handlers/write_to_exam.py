@@ -2,7 +2,7 @@ from vkbottle.bot import Blueprint, Message
 from vkbottle import CtxStorage
 from .. import keyboards
 from ..state import RegExam
-from ..google_sheets_api import exam
+from ..google_api import sheets
 
 SUBJECTS = ['математика', 'русский', 'литература', 'общество', 'история', 'английский', 'биология', 'без второго']
 P_SUBJECTS = ['математику', 'русский', 'литературу', 'общество', 'историю', 'английский', 'биологию']
@@ -13,8 +13,8 @@ STORAGE = CtxStorage()
 @bp.on.private_message(text='Записаться на пробный экз.')
 async def choice_exam(message: Message):
     await message.answer('Секунду, я проверю наличие свободных мест.')
-    free_places_sut = exam.get_times_sut()
-    free_places_sun = exam.get_time_sun()
+    free_places_sut = sheets.get_times_sut()
+    free_places_sun = sheets.get_time_sun()
     if not any((free_places_sut, free_places_sun)):
         await message.answer('К сожалению, свободных мест больше не осталось. Ждем тебя на следующей неделе!',
                              keyboard=None)
@@ -130,7 +130,7 @@ async def choice_second_time(message: Message):
             f"{STORAGE.get('first_subject')}: {STORAGE.get('first_day')} - {STORAGE.get('first_time')}\n"
         )
         users_info = await bp.api.users.get(message.from_id)
-        exam.sign_up_to_exam({
+        sheets.sign_up_to_exam({
             'name': f'{users_info[0].last_name} {users_info[0].first_name}',
             'type_exam': STORAGE.get('type_exam'),
             'first_day': STORAGE.get('first_day').upper(),
@@ -166,7 +166,7 @@ async def finish_reg_exam(message: Message):
                          f"{STORAGE.get('second_subject')}: {STORAGE.get('second_day')} - {STORAGE.get('second_time')}"
                          )
     users_info = await bp.api.users.get(message.from_id)
-    exam.sign_up_to_exam({
+    sheets.sign_up_to_exam({
         'name': f'{users_info[0].last_name} {users_info[0].first_name}',
         'type_exam': STORAGE.get('type_exam'),
         'first_day': STORAGE.get('first_day').upper(),
