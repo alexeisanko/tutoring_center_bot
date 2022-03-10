@@ -1,4 +1,3 @@
-import asyncio
 import logging
 from multiprocessing import Process
 
@@ -12,7 +11,7 @@ from apps.reg_users import register_reg_user
 
 from vkbottle.bot import Bot as BotVK
 from config import TOKEN_API_VK
-from vk_utils import welcome_message
+from apps.reg_for_trial_exam.google_api import drive
 import apps
 import vk_utils
 
@@ -32,7 +31,7 @@ def bot_tg():
 
 
 def bot_vk():
-
+    drive.make_current_workbook()
     bot = BotVK(token=TOKEN_API_VK)
 
     for bp in vk_utils.bps:

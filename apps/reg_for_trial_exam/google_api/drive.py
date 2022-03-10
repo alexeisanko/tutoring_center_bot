@@ -31,17 +31,22 @@ def copy_to_archive():
 
 def make_current_workbook():
     gc = gspread.service_account(SERVICE_ACCOUNT_FILE)
-    new_data = datetime.datetime.now() + datetime.timedelta(days=(5 - datetime.datetime.now().weekday()))
-    new_name = f'Запись на пробный экз на {new_data.strftime("%d.%m.%y")}'
-    new_sh = gc.copy(file_id=FORMAT_SHEETS_ID,
-                     title=new_name)
-    new_sh.worksheet('СУББОТА').update_cell(1, 1, f'СУББОТА {new_data.strftime("%d.%m")}')
-    new_sh.worksheet('ВОСКРЕСЕНЬЕ').update_cell(1,
-                                                1,
-                                                f'ВОСКРЕСЕНЬЕ {(new_data + datetime.timedelta(days=1)).strftime("%d.%m")}'
-                                                )
-    global CURRENT_SHEETS_ID
-    CURRENT_SHEETS_ID = new_sh.id
+    near_saturday = datetime.datetime.now() + datetime.timedelta(days=(5 - datetime.datetime.now().weekday()))
+    need_name = f'Запись на пробный экз на {near_saturday.strftime("%d.%m.%y")}'
+    try:
+        sh = gc.open(title=need_name)
+        global CURRENT_SHEETS_ID
+        CURRENT_SHEETS_ID = sh.id
+    except:
+        new_sh = gc.copy(file_id=FORMAT_SHEETS_ID,
+                         title=need_name)
+        new_sh.worksheet('СУББОТА').update_cell(1, 1, f'СУББОТА {near_saturday.strftime("%d.%m")}')
+        new_sh.worksheet('ВОСКРЕСЕНЬЕ').update_cell(1,
+                                                    1,
+                                                    f'ВОСКРЕСЕНЬЕ {(near_saturday + datetime.timedelta(days=1)).strftime("%d.%m")}'
+                                                    )
+        global CURRENT_SHEETS_ID
+        CURRENT_SHEETS_ID = new_sh.id
     return CURRENT_SHEETS_ID
 
 
