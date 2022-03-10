@@ -35,7 +35,6 @@ def make_current_workbook():
     need_name = f'Запись на пробный экз на {near_saturday.strftime("%d.%m.%y")}'
     try:
         sh = gc.open(title=need_name)
-        global CURRENT_SHEETS_ID
         CURRENT_SHEETS_ID = sh.id
     except:
         new_sh = gc.copy(file_id=FORMAT_SHEETS_ID,
@@ -45,8 +44,8 @@ def make_current_workbook():
                                                     1,
                                                     f'ВОСКРЕСЕНЬЕ {(near_saturday + datetime.timedelta(days=1)).strftime("%d.%m")}'
                                                     )
-        global CURRENT_SHEETS_ID
         CURRENT_SHEETS_ID = new_sh.id
+    print(CURRENT_SHEETS_ID)
     return CURRENT_SHEETS_ID
 
 

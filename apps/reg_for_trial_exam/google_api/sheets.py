@@ -1,11 +1,11 @@
 import gspread
-from .drive import CURRENT_SHEETS_ID
+from ..google_api import drive
 
 
 def connect_to_sheet():
     gc = gspread.service_account('apps/reg_for_trial_exam/google_api/client_secret.json')
     # gc = gspread.service_account('client_secret.json')
-    sh = gc.open_by_key(CURRENT_SHEETS_ID)
+    sh = gc.open_by_key(drive.CURRENT_SHEETS_ID)
     return sh
 
 

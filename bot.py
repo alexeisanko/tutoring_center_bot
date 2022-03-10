@@ -31,7 +31,7 @@ def bot_tg():
 
 
 def bot_vk():
-    drive.make_current_workbook()
+    drive.CURRENT_SHEETS_ID = drive.make_current_workbook()
     bot = BotVK(token=TOKEN_API_VK)
 
     for bp in vk_utils.bps:

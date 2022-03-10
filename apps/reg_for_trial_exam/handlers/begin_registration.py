@@ -24,7 +24,7 @@ async def begin_send_private_message(message: Message):
             return
         if datetime.datetime.now().weekday() == 1 and datetime.datetime.now().hour == 12:
             drive.copy_to_archive()
-            drive.make_current_workbook()
+            drive.CURRENT_SHEETS_ID = drive.make_current_workbook()
             members = dict(await bp.api.groups.get_members(GROUP_VK_ID))
             for member in members['items']:
                 try:
@@ -63,13 +63,11 @@ async def stop_send_private_messages(message: Message):
 
 @bp.on.private_message(command='new')
 async def begin_send_private_message(message: Message):
-    from ..google_api import drive
-    drive.make_current_workbook()
+    drive.CURRENT_SHEETS_ID = drive.make_current_workbook()
     print(drive.CURRENT_SHEETS_ID)
 
 
 @bp.on.private_message(command='old')
 async def begin_send_private_message(message: Message):
-    from ..google_api import drive
     drive.copy_to_archive()
     print(drive.CURRENT_SHEETS_ID)
