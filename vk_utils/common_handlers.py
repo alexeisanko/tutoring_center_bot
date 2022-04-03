@@ -3,6 +3,7 @@ from vkbottle.bot import Message
 from vkbottle import Keyboard, Text, KeyboardButtonColor
 
 bp = Blueprint()
+bp.labeler.vbml_ignore_case = True
 
 
 def start_keyboard():
@@ -19,5 +20,7 @@ async def start(message: Message):
                          'Пиши мне, если хочешь записаться на пробный экзамен!\n\n'
                          'P.S. Не забывай, что дедлайн по записи на пробники - 14:00 в пятницу. '
                          'После этого я уже не смогу тебя записать.', keyboard=start_keyboard())
-
-
+    try:
+        await bp.state_dispenser.delete(message.peer_id)
+    except KeyError:
+        pass

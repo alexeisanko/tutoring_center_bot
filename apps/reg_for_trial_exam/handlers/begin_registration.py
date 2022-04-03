@@ -22,7 +22,7 @@ async def begin_send_private_message(message: Message):
     while True:
         if not FLAG_PRIVATE:
             return
-        if datetime.datetime.now().weekday() == 1 and datetime.datetime.now().hour == 12:
+        if datetime.datetime.now().weekday() == 2:
             drive.copy_to_archive()
             drive.CURRENT_SHEETS_ID = drive.make_current_workbook()
             members = dict(await bp.api.groups.get_members(GROUP_VK_ID))

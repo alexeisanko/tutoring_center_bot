@@ -4,8 +4,19 @@ from .. import keyboards
 from ..state import RegExam
 from ..google_api import sheets
 
-SUBJECTS = ['математика', 'русский', 'литература', 'общество', 'история', 'английский', 'биология', 'без второго']
-P_SUBJECTS = ['математику', 'русский', 'литературу', 'общество', 'историю', 'английский', 'биологию']
+SUBJECTS = ['математика',
+            'русский',
+            'литература',
+            'общество',
+            'история',
+            'английский',
+            'биология',
+            'математика базовая',
+            'математика профильная',
+            'без второго',
+            'базовая',
+            'профильная']
+P_SUBJECTS = ['математику', 'русский', 'литературу', 'общество', 'историю', 'английский', 'биологию', 'математику', 'математику']
 bp = Blueprint()
 STORAGE = CtxStorage()
 
@@ -43,7 +54,13 @@ async def choice_second_subject(message: Message):
         await message.answer('Пока мы еще не проводим пробников по такому предмету. Выберите пожалуйста из '
                              'существующих', keyboard=keyboards.subjects_keyboard())
         return
-    STORAGE.set('first_subject', message.text.lower())
+    elif STORAGE.get('type_exam') == 'егэ' and message.text.lower() == 'математика':
+        await message.answer('Математика базовая или профильная?', keyboard=keyboards.type_math_keyboard())
+        return
+    if message.text.lower() in ['базовая', 'профильная']:
+        STORAGE.set('first_subject', f'математика {message.text.lower()}')
+    else:
+        STORAGE.set('first_subject', message.text.lower())
     await message.answer('Если хотите, вы можете выбрать еще один предмет для пробного экзамена',
                          keyboard=keyboards.subjects_keyboard(second=True))
     await bp.state_dispenser.set(message.peer_id, RegExam.CHOICE_SECOND_SUBJECT)
@@ -55,7 +72,13 @@ async def choice_first_day(message: Message):
         await message.answer('Пока мы еще не проводим пробников по такому предмету. Выберите пожалуйста из '
                              'существующих', keyboard=keyboards.subjects_keyboard(second=True))
         return
-    STORAGE.set('second_subject', message.text.lower())
+    elif STORAGE.get('type_exam') == 'егэ' and message.text.lower() == 'математика':
+        await message.answer('Математика базовая или профильная?', keyboard=keyboards.type_math_keyboard())
+        return
+    if message.text.lower() in ['базовая', 'профильная']:
+        STORAGE.set('second_subject', f'математика {message.text.lower()}')
+    else:
+        STORAGE.set('second_subject', message.text.lower())
     first_subject = STORAGE.get('first_subject')
     await message.answer(f'Почти готово! Какой день тебе удобнее попробывать написать '
                          f'{P_SUBJECTS[SUBJECTS.index(first_subject)]}?',

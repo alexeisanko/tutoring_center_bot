@@ -40,3 +40,10 @@ def time_keyboard(places):
         if i == 2 and new_row:
             keyboard.row()
     return keyboard.get_json()
+
+
+def type_math_keyboard():
+    keyboard = Keyboard(one_time=True, inline=False)
+    keyboard.add(Text("Базовая"), color=KeyboardButtonColor.POSITIVE)
+    keyboard.add(Text("Профильная"), color=KeyboardButtonColor.POSITIVE)
+    return keyboard.get_json()
