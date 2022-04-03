@@ -1,3 +1,4 @@
+import datetime
 from vkbottle.bot import Blueprint, Message
 from vkbottle import CtxStorage
 from .. import keyboards
@@ -16,13 +17,29 @@ SUBJECTS = ['математика',
             'без второго',
             'базовая',
             'профильная']
-P_SUBJECTS = ['математику', 'русский', 'литературу', 'общество', 'историю', 'английский', 'биологию', 'математику', 'математику']
+P_SUBJECTS = ['математику',
+              'русский',
+              'литературу',
+              'общество',
+              'историю',
+              'английский',
+              'биологию',
+              'математику',
+              'математику']
 bp = Blueprint()
 STORAGE = CtxStorage()
 
 
 @bp.on.private_message(text='Записаться на пробный экз.')
 async def choice_exam(message: Message):
+    now_date = datetime.datetime.now()
+    if now_date.weekday() in (5, 6) or \
+            (now_date.weekday() == 0 and now_date.hour < 9) or \
+            (now_date.weekday() == 4 and now_date.hour >= 11):
+        await message.answer('К сожалению, запись на пробные экзамены уже закончилась. '
+                             'Новая запись откроется в понедельник в 12:00',
+                             keyboard=None)
+        return
     await message.answer('Секунду, я проверю наличие свободных мест.')
     free_places_sut = sheets.get_times_sut()
     free_places_sun = sheets.get_time_sun()
