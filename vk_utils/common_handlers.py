@@ -1,3 +1,5 @@
+import logging
+
 from vkbottle.bot import Blueprint
 from vkbottle.bot import Message
 from vkbottle import Keyboard, Text, KeyboardButtonColor
@@ -20,6 +22,17 @@ async def start(message: Message):
                          'Пиши мне, если хочешь записаться на пробный экзамен!\n\n'
                          'P.S. Не забывай, что дедлайн по записи на пробники - 14:00 в пятницу. '
                          'После этого я уже не смогу тебя записать.', keyboard=start_keyboard())
+    try:
+        await bp.state_dispenser.delete(message.peer_id)
+    except KeyError:
+        pass
+
+@bp.on.private_message(text='Отмена')
+async def start(message: Message):
+    logging.info(f'{message.peer_id} прекратил своб запись')
+    await message.answer('Видимо что-то пошло не так. Возврашаемся в основное меню.\n\n'
+                         'Хотите записаться на экзамен? Жми на кнопку',
+                         keyboard=start_keyboard())
     try:
         await bp.state_dispenser.delete(message.peer_id)
     except KeyError:

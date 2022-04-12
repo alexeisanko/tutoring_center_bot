@@ -17,6 +17,7 @@ def subjects_keyboard(second=False):
         if (subjects.index(subject) + 1) / 3 == (subjects.index(subject) + 1) // 3:
             keyboard.row()
         keyboard.add(Text(subject), color=KeyboardButtonColor.POSITIVE)
+    keyboard.add(Text('Отмена'), color=KeyboardButtonColor.NEGATIVE)
     return keyboard.get_json()
 
 
@@ -26,6 +27,7 @@ def day_keyboard(sut, sun):
         keyboard.add(Text("Суббота"), color=KeyboardButtonColor.POSITIVE)
     if sun:
         keyboard.add(Text("Воскресенье"), color=KeyboardButtonColor.POSITIVE)
+    keyboard.add(Text('Отмена'), color=KeyboardButtonColor.NEGATIVE)
     return keyboard.get_json()
 
 
@@ -39,6 +41,7 @@ def time_keyboard(places):
         keyboard.add(Text(time), color=KeyboardButtonColor.POSITIVE)
         if i == 2 and new_row:
             keyboard.row()
+    keyboard.add(Text('Отмена'), color=KeyboardButtonColor.NEGATIVE)
     return keyboard.get_json()
 
 
