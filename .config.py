@@ -11,3 +11,4 @@ CHAT_ID_TG = 'chat_id'
 # настройка бота в вк
 TOKEN_API_VK = 'token'
 CHAT_ID_VK = 'chat_id'
+GROUP_VK_ID = ''
