@@ -14,7 +14,7 @@ async def send_welcome_message():
             await bp.api.messages.send(message='Привет!\n'
                                                'Желаю тебе хорошей учебной недели! '
                                                'Открыта регистрация на пробник, может сразу запишемся?\n\n'
-                                               'P.S. Напоминаю, что делайн для записи - пятница 14:00. '
+                                               'P.S. Напоминаю, что делайн для записи - четверг 20:00. '
                                                'После этого запись прекращается',
                                        user_id=member,
                                        random_id=random.randint(1, 1000000), keyboard=start_keyboard())

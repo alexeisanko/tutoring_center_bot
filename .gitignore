@@ -2,3 +2,4 @@
 /venv/
 apps/reg_for_trial_exam/google_api/client_secret.json
 .idea
+/apps/reg_for_trial_exam/google_api/my_client_secret.json
