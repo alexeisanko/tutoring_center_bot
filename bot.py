@@ -11,14 +11,14 @@ logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
 
 
-def bot_tg():
-    bot = BotTG(token=TOKEN_API_TG)
-    dp = Dispatcher(bot, storage=MemoryStorage())
-    dp.setup_middleware(LoggingMiddleware())
-    register_common(dp)
-    register_notifier(dp)
-    register_reg_user(dp)
-    executor.start_polling(dp, skip_updates=True)
+# def bot_tg():
+#     bot = BotTG(token=TOKEN_API_TG)
+#     dp = Dispatcher(bot, storage=MemoryStorage())
+#     dp.setup_middleware(LoggingMiddleware())
+#     register_common(dp)
+#     register_notifier(dp)
+#     register_reg_user(dp)
+#     executor.start_polling(dp, skip_updates=True)
 
 
 def bot_vk():

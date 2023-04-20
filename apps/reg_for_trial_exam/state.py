@@ -11,3 +11,8 @@ class RegExam(BaseStateGroup):
     CHOICE_SECOND_TIME = 6
     CHECK_DATA = 7
 
+
+class AdminState(BaseStateGroup):
+    WRITE_MESSAGE = 0
+    CHOICE_TEXT = 1
+    CHANGE_TEXT = 2
