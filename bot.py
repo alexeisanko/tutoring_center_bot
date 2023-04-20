@@ -1,13 +1,4 @@
 import logging
-from multiprocessing import Process
-
-from aiogram import Bot as BotTG, Dispatcher, executor
-from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from aiogram.contrib.middlewares.logging import LoggingMiddleware
-from config import TOKEN_API_TG
-from tg_utils.common_handlers import register_common
-from apps.notifier.manage import register_notifier
-from apps.reg_users import register_reg_user
 
 from vkbottle.bot import Bot as BotVK
 from config import TOKEN_API_VK
@@ -44,9 +35,4 @@ def bot_vk():
 
 
 if __name__ == '__main__':
-    # tg = Process(target=bot_tg)
-    vk = Process(target=bot_vk)
-    # tg.start()
-    vk.start()
-    # tg.join()
-    vk.join()
+    bot_vk()

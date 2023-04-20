@@ -12,7 +12,7 @@ def subjects_keyboard(second=False):
     keyboard = Keyboard(one_time=True, inline=False)
     if second:
         keyboard.add(Text('Без второго'), color=KeyboardButtonColor.PRIMARY)
-    subjects = ['Математика', 'Русский', 'Литература', 'Общество', 'История', 'Английский', 'Биология']
+    subjects = ['Математика', 'Русский', 'Литература', 'Общество', 'История', 'Английский', 'Биология', 'Химия']
     for subject in subjects:
         if (subjects.index(subject) + 1) / 3 == (subjects.index(subject) + 1) // 3:
             keyboard.row()

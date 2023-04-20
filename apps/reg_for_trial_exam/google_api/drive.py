@@ -9,7 +9,7 @@ SERVICE_ACCOUNT_FILE = 'apps/reg_for_trial_exam/google_api/client_secret.json'
 SCOPES = ['https://www.googleapis.com/auth/drive']
 CURRENT_SHEETS_ID = '1FbTL-j9cDHIxqT82ILTdDInIF4-xHSTajKFCUFAMrtM'
 FORMAT_SHEETS_ID = '1FbTL-j9cDHIxqT82ILTdDInIF4-xHSTajKFCUFAMrtM'
-FOLDER_ARCH_ID = '1YiPHC_J1O760CKZqg1Qb37TY1vHeFHxp'
+FOLDER_ARCH_ID = '1R_f0ZFwZkY3gbEbhiQvnnPzbtEyOlEd9'
 
 
 def connect_api():

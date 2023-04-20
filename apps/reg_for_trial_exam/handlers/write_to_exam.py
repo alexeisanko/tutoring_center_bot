@@ -2,6 +2,7 @@ import datetime
 import logging
 from vkbottle.bot import Blueprint, Message
 from .. import keyboards
+from vk_utils.common_handlers import start_keyboard
 from ..state import RegExam
 from ..google_api import sheets
 
@@ -12,6 +13,7 @@ SUBJECTS = ['математика',
             'история',
             'английский',
             'биология',
+            'химия',
             'математика базовая',
             'математика профильная',
             'без второго',
@@ -24,6 +26,7 @@ P_SUBJECTS = ['математику',
               'историю',
               'английский',
               'биологию',
+              'химию',
               'математику',
               'математику']
 bp = Blueprint()
@@ -33,16 +36,16 @@ STORAGE = {}
 @bp.on.private_message(text='Записаться на пробный экз.')
 async def choice_exam(message: Message):
     now_date = datetime.datetime.now()
-    if now_date.weekday() in (5, 6) or \
+    if now_date.weekday() in (4, 5, 6) or \
             (now_date.weekday() == 0 and now_date.hour < 9) or \
-            (now_date.weekday() == 4 and now_date.hour >= 11):
+            (now_date.weekday() == 3 and now_date.hour >= 17):
         await message.answer('К сожалению, запись на пробные экзамены уже закончилась. '
                              'Новая запись откроется в понедельник в 12:00',
                              keyboard=None)
         return
     await message.answer('Секунду, я проверю наличие свободных мест.')
-    free_places_sut = sheets.get_times_sut()
-    free_places_sun = sheets.get_time_sun()
+    free_places_sut = sheets.get_free_times('СУББОТА')
+    free_places_sun = sheets.get_free_times('ВОСКРЕСЕНЬЕ')
     if not any((free_places_sut, free_places_sun)):
         await message.answer('К сожалению, свободных мест больше не осталось. Ждем тебя на следующей неделе!',
                              keyboard=None)
@@ -164,15 +167,9 @@ async def choice_second_time(message: Message):
     STORAGE[message.peer_id]['first_time'] = message.text.lower()
     second_subject = STORAGE[message.peer_id]['second_subject']
     if second_subject == 'без второго':
-        await message.answer(
-            'Супер! Я записал тебя и буду ждать, когда ты придешь на пробный в эти выходные! Если что-то '
-            'пошло не так, пиши в личные сообшения на страницу https://vk.com/newschool408'
-            '\n\n\n Напомню:\n'
-            f"Тип пробного экзамена: {STORAGE[message.peer_id]['type_exam'].upper()}\n"
-            f"{STORAGE[message.peer_id]['first_subject']}: {STORAGE[message.peer_id]['first_day']} - {STORAGE[message.peer_id]['first_time']}\n "
-        )
+
         users_info = await bp.api.users.get(message.from_id)
-        sheets.sign_up_to_exam({
+        result = sheets.sign_up_to_exam({
             'name': f'{users_info[0].last_name} {users_info[0].first_name}',
             'type_exam': STORAGE[message.peer_id]['type_exam'],
             'first_day': STORAGE[message.peer_id]['first_day'].upper(),
@@ -181,11 +178,26 @@ async def choice_second_time(message: Message):
             'first_free_places': STORAGE[message.peer_id]['first_free_places']
         },
             second=False)
+        if result:
+            await message.answer(
+                'Супер! Я записал тебя и буду ждать, когда ты придешь на пробный в эти выходные! Если что-то '
+                'пошло не так, пиши в личные сообшения на страницу https://vk.com/newschool408'
+                '\n\n\n Напомню:\n'
+                f"Тип пробного экзамена: {STORAGE[message.peer_id]['type_exam'].upper()}\n"
+                f"{STORAGE[message.peer_id]['first_subject']}: {STORAGE[message.peer_id]['first_day']} - {STORAGE[message.peer_id]['first_time']}\n "
+            )
+            logging.info(f'{message.peer_id} записался')
+        else:
+            await message.answer(
+                'Упс... Ты так долго записывался что уже все места на этой время разобрали...\n '
+                'Ты можешь попробовать еще раз и записаться на другое время.', keyboard=start_keyboard()
+            )
+            logging.info(f'{message.peer_id} не записался (нехватка места)')
         try:
             del STORAGE[message.peer_id]
         except KeyError:
             logging.warning(f'Не получилось удалить пользователя {message.peer_id}')
-        logging.info(f'{message.peer_id} записался')
+
         await bp.state_dispenser.delete(message.peer_id)
     else:
         free_places = STORAGE[message.peer_id]['free_places_sut'] if STORAGE[message.peer_id]['second_day'] == 'суббота' \
@@ -205,15 +217,8 @@ async def finish_reg_exam(message: Message):
                              keyboard=keyboards.time_keyboard(free_places))
         return
     STORAGE[message.peer_id]['second_time'] = message.text.lower()
-    await message.answer('Супер! Я записал тебя и буду ждать, когда ты придешь на пробный в эти выходные! Если что-то '
-                         'пошло не так, пиши в личные сообшения на страницу НьюСкул Пробники'
-                         '\n\n\n Напомню:\n'
-                         f"Тип пробного экзамена: {STORAGE[message.peer_id]['type_exam'].upper()}\n"
-                         f"{STORAGE[message.peer_id]['first_subject']}: {STORAGE[message.peer_id]['first_day']} - {STORAGE[message.peer_id]['first_time']}\n"
-                         f"{STORAGE[message.peer_id]['second_subject']}: {STORAGE[message.peer_id]['second_day']} - {STORAGE[message.peer_id]['second_time']}"
-                         )
     users_info = await bp.api.users.get(message.from_id)
-    sheets.sign_up_to_exam({
+    result = sheets.sign_up_to_exam({
         'name': f'{users_info[0].last_name} {users_info[0].first_name}',
         'type_exam': STORAGE[message.peer_id]['type_exam'],
         'first_day': STORAGE[message.peer_id]['first_day'].upper(),
@@ -226,6 +231,22 @@ async def finish_reg_exam(message: Message):
         'second_free_places': STORAGE[message.peer_id]['second_free_places']
     },
         second=True)
+    if result:
+        await message.answer(
+            'Супер! Я записал тебя и буду ждать, когда ты придешь на пробный в эти выходные! Если что-то '
+            'пошло не так, пиши в личные сообшения на страницу НьюСкул Пробники'
+            '\n\n\n Напомню:\n'
+            f"Тип пробного экзамена: {STORAGE[message.peer_id]['type_exam'].upper()}\n"
+            f"{STORAGE[message.peer_id]['first_subject']}: {STORAGE[message.peer_id]['first_day']} - {STORAGE[message.peer_id]['first_time']}\n"
+            f"{STORAGE[message.peer_id]['second_subject']}: {STORAGE[message.peer_id]['second_day']} - {STORAGE[message.peer_id]['second_time']}"
+            )
+        logging.info(f'{message.peer_id} записался')
+    else:
+        await message.answer(
+            'Упс... Ты так долго записывался что все места на какой-то предмет на это время уже разобрали...\n '
+            'Ты можешь попробовать еще раз и записаться на другое время.', keyboard=start_keyboard()
+        )
+        logging.info(f'{message.peer_id} не записался (нехватка места)')
     try:
         del STORAGE[message.peer_id]
     except KeyError:

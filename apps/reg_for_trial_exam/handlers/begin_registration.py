@@ -19,6 +19,20 @@ async def begin_send_private_message(message: Message):
     global FLAG_PRIVATE
     FLAG_PRIVATE = True
     await message.answer('Режим регистрации на пробный экзамен включен')
+
+    # members = dict(await bp.api.groups.get_members(GROUP_VK_ID))
+    # for member in members['items']:
+    #             try:
+    #                 await bp.api.messages.send(message='Привет!\n'
+    #                                                   'Салаты все уже съедены, подарки подарены :)\n'
+    #                                                   'А значит пришло время снова учиться и готовиться к экзаменам!\n'
+    #                                                   'Ты знаешь что делать :)'
+    #                                                   ,
+    #                                           user_id=member,
+    #                                           random_id=random.randint(1, 1000000), keyboard=start_keyboard())
+    #             except VKAPIError:
+    #                 continue
+
     while True:
         if not FLAG_PRIVATE:
             return
@@ -31,20 +45,20 @@ async def begin_send_private_message(message: Message):
                     await bp.api.messages.send(message='Привет!\n'
                                                        'Желаю тебе хорошей учебной недели! '
                                                        'Открыта регистрация на пробник, может сразу запишемся?\n\n'
-                                                       'P.S. Напоминаю, что делайн для записи - пятница 14:00. '
+                                                       'P.S. Напоминаю, что делайн для записи - четверг 20:00. '
                                                        'После этого запись прекращается',
                                                user_id=member,
                                                random_id=random.randint(1, 1000000), keyboard=start_keyboard())
                 except VKAPIError:
                     continue
-        elif datetime.datetime.now().weekday() == 3 and datetime.datetime.now().hour == 9:
+        elif datetime.datetime.now().weekday() == 2 and datetime.datetime.now().hour == 9:
             members = dict(await bp.api.groups.get_members(GROUP_VK_ID))
             for member in members['items']:
                 try:
                     await bp.api.messages.send(message='Салют!\n'
                                                        'Завтра последний день для записи на пробный экзамен, ты уже '
                                                        'записался?\n\n '
-                                                       'P.S. Напоминаю, что делайн для записи - пятница 14:00. После '
+                                                       'P.S. Напоминаю, что делайн для записи - четверг 20:00. После '
                                                        'этого запись прекращается',
                                                user_id=member,
                                                random_id=random.randint(1, 1000000))
